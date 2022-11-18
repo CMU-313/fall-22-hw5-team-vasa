@@ -1,35 +1,35 @@
-'use strict';
+'use strict'
 
 /**
  * User service.
  */
-angular.module('docs').factory('User', function(Restangular) {
-  var userInfo = null;
-  
+angular.module('docs').factory('User', function (Restangular) {
+  let userInfo = null
+
   return {
     /**
      * Returns user info.
      * @param force If true, force reloading data
      */
-    userInfo: function(force) {
+    userInfo: function (force) {
       if (userInfo === null || force) {
-        userInfo = Restangular.one('user').get();
+        userInfo = Restangular.one('user').get()
       }
-      return userInfo;
+      return userInfo
     },
-    
+
     /**
      * Login an user.
      */
-    login: function(user) {
-      return Restangular.one('user').post('login', user);
+    login: function (user) {
+      return Restangular.one('user').post('login', user)
     },
-    
+
     /**
      * Logout the current user.
      */
-    logout: function() {
-      return Restangular.one('user').post('logout', {});
+    logout: function () {
+      return Restangular.one('user').post('logout', {})
     }
   }
-});
+})

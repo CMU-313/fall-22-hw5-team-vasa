@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 /**
  * Main controller.
  */
-angular.module('share').controller('Main', function() {
-});
+angular.module('share').controller('Main', function () {
+})

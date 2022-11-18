@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Document default controller.
@@ -6,108 +6,108 @@
 angular.module('docs').controller('DocumentDefault', function ($scope, $rootScope, $state, Restangular, Upload, $translate, $uibModal, $dialog, User) {
   // Load user audit log
   Restangular.one('auditlog').get().then(function (data) {
-    $scope.logs = data.logs;
-  });
+    $scope.logs = data.logs
+  })
 
   // Load unlinked files
   $scope.loadFiles = function () {
     Restangular.one('file/list').get().then(function (data) {
-      $scope.files = data.files;
-    });
-  };
-  $scope.loadFiles();
+      $scope.files = data.files
+    })
+  }
+  $scope.loadFiles()
 
   // File has been drag & dropped
   $scope.fileDropped = function (files) {
     if (files && files.length) {
       // Adding files to the UI
-      var newfiles = [];
+      const newfiles = []
       _.each(files, function (file) {
-        var newfile = {
+        const newfile = {
           progress: 0,
           name: file.name,
           create_date: new Date().getTime(),
           mimetype: file.type,
           status: $translate.instant('document.default.upload_pending')
-        };
-        $scope.files.push(newfile);
-        newfiles.push(newfile);
-      });
+        }
+        $scope.files.push(newfile)
+        newfiles.push(newfile)
+      })
 
       // Uploading files sequentially
-      var key = 0;
+      let key = 0
       var then = function () {
         if (files[key]) {
-          $scope.uploadFile(files[key], newfiles[key++]).then(then);
+          $scope.uploadFile(files[key], newfiles[key++]).then(then)
         }
-      };
-      then();
+      }
+      then()
     }
-  };
+  }
 
   // Upload a file
   $scope.uploadFile = function (file, newfile) {
     // Upload the file
-    newfile.status = $translate.instant('document.default.upload_progress');
+    newfile.status = $translate.instant('document.default.upload_progress')
     return Upload.upload({
       method: 'PUT',
       url: '../api/file',
-      file: file
+      file
     })
-        .progress(function (e) {
-          newfile.progress = parseInt(100.0 * e.loaded / e.total);
-        })
-        .success(function (data) {
-          // Update local model with real data
-          newfile.id = data.id;
-          newfile.size = data.size;
+      .progress(function (e) {
+        newfile.progress = parseInt(100.0 * e.loaded / e.total)
+      })
+      .success(function (data) {
+        // Update local model with real data
+        newfile.id = data.id
+        newfile.size = data.size
 
-          // New file uploaded, increase used quota
-          $rootScope.userInfo.storage_current += data.size;
-        })
-        .error(function (data) {
-          newfile.status = $translate.instant('document.default.upload_error');
-          if (data.type === 'QuotaReached') {
-            newfile.status += ' - ' + $translate.instant('document.default.upload_error_quota');
-          }
-        });
-  };
+        // New file uploaded, increase used quota
+        $rootScope.userInfo.storage_current += data.size
+      })
+      .error(function (data) {
+        newfile.status = $translate.instant('document.default.upload_error')
+        if (data.type === 'QuotaReached') {
+          newfile.status += ' - ' + $translate.instant('document.default.upload_error_quota')
+        }
+      })
+  }
 
   // Navigate to the selected file
   $scope.openFile = function (file) {
     $state.go('document.default.file', { fileId: file.id })
-  };
+  }
 
   // Delete a file
   $scope.deleteFile = function ($event, file) {
-    $event.stopPropagation();
+    $event.stopPropagation()
 
     Restangular.one('file', file.id).remove().then(function () {
       // File deleted, decrease used quota
-      $rootScope.userInfo.storage_current -= file.size;
+      $rootScope.userInfo.storage_current -= file.size
 
       // Update local data
-      $scope.loadFiles();
-    });
-    return false;
-  };
+      $scope.loadFiles()
+    })
+    return false
+  }
 
   // Returns checked files
   $scope.checkedFiles = function () {
-    return _.where($scope.files, { checked: true });
-  };
+    return _.where($scope.files, { checked: true })
+  }
 
   // Change checked status
   $scope.changeChecked = function (checked) {
     _.each($scope.files, function (file) {
-      file.checked = checked;
+      file.checked = checked
     })
-  };
+  }
 
   // Add a document with checked files
   $scope.addDocument = function () {
-    $state.go('document.add', { files: _.pluck($scope.checkedFiles(), 'id') });
-  };
+    $state.go('document.add', { files: _.pluck($scope.checkedFiles(), 'id') })
+  }
 
   // Open the feedback modal
   $scope.openFeedback = function () {
@@ -116,21 +116,21 @@ angular.module('docs').controller('DocumentDefault', function ($scope, $rootScop
       controller: 'ModalFeedback'
     }).result.then(function (content) {
       if (content === null) {
-        return;
+        return
       }
 
       Restangular.withConfig(function (RestangularConfigurer) {
-        RestangularConfigurer.setBaseUrl('https://api.teedy.io');
+        RestangularConfigurer.setBaseUrl('https://api.teedy.io')
       }).one('api').post('feedback', {
-        content: content
+        content
       }).then(function () {
-        var title = $translate.instant('feedback.sent_title');
-        var msg = $translate.instant('feedback.sent_message');
-        var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
-        $dialog.messageBox(title, msg, btns);
-      });
-    });
-  };
+        const title = $translate.instant('feedback.sent_title')
+        const msg = $translate.instant('feedback.sent_message')
+        const btns = [{ result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary' }]
+        $dialog.messageBox(title, msg, btns)
+      })
+    })
+  }
 
   // Load active routes
   Restangular.one('document/list').get({
@@ -139,19 +139,19 @@ angular.module('docs').controller('DocumentDefault', function ($scope, $rootScop
     limit: 10,
     search: 'workflow:me'
   }).then(function (data) {
-    $scope.documentsWorkflow = data.documents;
-  });
+    $scope.documentsWorkflow = data.documents
+  })
 
   // Onboarding
   $translate('onboarding.step1.title').then(function () {
-    User.userInfo().then(function(userData) {
+    User.userInfo().then(function (userData) {
       if (!userData.onboarding || $(window).width() < 1000) {
-        return;
+        return
       }
-      Restangular.one('user').post('onboarded');
-      $rootScope.userInfo.onboarding = false;
+      Restangular.one('user').post('onboarded')
+      $rootScope.userInfo.onboarding = false
 
-      $rootScope.onboardingEnabled = true;
+      $rootScope.onboardingEnabled = true
 
       $rootScope.onboardingSteps = [
         {
@@ -185,10 +185,10 @@ angular.module('docs').controller('DocumentDefault', function ($scope, $rootScop
           title: $translate.instant('onboarding.step5.title'),
           description: $translate.instant('onboarding.step5.description'),
           attachTo: '#navigation-tag',
-          position: "right",
+          position: 'right',
           width: 300
         }
-      ];
-    });
-  });
-});
+      ]
+    })
+  })
+})

@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * ACL directive.
  */
-angular.module('docs').directive('acl', function() {
+angular.module('docs').directive('acl', function () {
   return {
     restrict: 'E',
     template: '<span ng-show="data.type"><em>{{ \'acl.\' + data.type | translate }}</em> {{ data.name }}</span>',
@@ -12,4 +12,4 @@ angular.module('docs').directive('acl', function() {
       data: '='
     }
   }
-});
+})

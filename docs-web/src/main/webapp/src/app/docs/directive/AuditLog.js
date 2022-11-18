@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * Audit log directive.
  */
-angular.module('docs').directive('auditLog', function() {
+angular.module('docs').directive('auditLog', function () {
   return {
     restrict: 'E',
     templateUrl: 'partial/docs/directive.auditlog.html',
@@ -12,4 +12,4 @@ angular.module('docs').directive('auditLog', function() {
       logs: '='
     }
   }
-});
+})
