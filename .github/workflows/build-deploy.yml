@@ -61,6 +61,8 @@ jobs:
           branch: badges
           force: true
 
+      - name: Install modules
+        run: yarn
+
       - name: Run ESLint
-        uses: stefanoeb/eslint-action@1.0.2
-        
+        run: yarn run eslint .
