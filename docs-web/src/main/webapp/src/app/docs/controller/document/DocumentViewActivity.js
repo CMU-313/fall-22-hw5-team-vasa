@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Document view activity controller.
@@ -7,7 +7,7 @@ angular.module('docs').controller('DocumentViewActivity', function ($scope, $sta
   // Load audit log data from server
   Restangular.one('auditlog').get({
     document: $stateParams.id
-  }).then(function(data) {
-    $scope.logs = data.logs;
-  });
-});
+  }).then(function (data) {
+    $scope.logs = data.logs
+  })
+})
