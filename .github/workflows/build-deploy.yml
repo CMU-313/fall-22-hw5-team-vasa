@@ -60,6 +60,10 @@ jobs:
           branch: badges
           force: true
 
+      - name: Run ESLint
+        uses: stefanoeb/eslint-action@1.0.2
+
+
 
 
      
